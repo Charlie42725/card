@@ -5,13 +5,6 @@
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -23,4 +16,180 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* 抽卡主區域 */
+.gacha-main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--background);
+}
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+.gacha-btn {
+  padding: 0.75rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  background: #f5c542;
+  color: #222;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #0002;
+  transition: background 0.2s;
+}
+.gacha-btn:disabled {
+  background: #ccc;
+  color: #888;
+  cursor: not-allowed;
+}
+.gacha-area {
+  margin-top: 2rem;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 卡包滑動選擇區域 */
+.pack-scroll {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 12px 0;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.scroll-pack {
+  min-width: 120px;
+  height: 160px;
+  background: linear-gradient(135deg, #e0e0e0 60%, #fffbe6 100%);
+  border-radius: 16px;
+  box-shadow: 0 0 12px #0002;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border 0.2s, box-shadow 0.2s;
+  user-select: none;
+}
+.scroll-pack.selected {
+  border: 2px solid #f5c542;
+  box-shadow: 0 0 24px #f5c54288, 0 2px 12px #0002;
+  background: linear-gradient(135deg, #f5c542 60%, #fffbe6 100%);
+}
+/* 卡包動畫 */
+.card-pack {
+  width: 120px;
+  height: 160px;
+  background: linear-gradient(135deg, #f5c542 60%, #fffbe6 100%);
+  border-radius: 16px;
+  box-shadow: 0 0 24px #f5c54288, 0 2px 12px #0002;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  animation: pack-in 0.8s ease-in-out;
+}
+@keyframes pack-in {
+  0% { transform: scale(0.7); opacity: 0.5; }
+  60% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+/* 爆光動畫 */
+.explosion {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffbe6 60%, #f5c542 100%, transparent 100%);
+  box-shadow: 0 0 80px 40px #f5c54288;
+  opacity: 0;
+  animation: explosion 0.6s forwards;
+  z-index: 2;
+}
+@keyframes explosion {
+  0% { opacity: 0; transform: scale(0.7) translate(-50%, -50%); }
+  60% { opacity: 1; transform: scale(1.2) translate(-50%, -50%); }
+  100% { opacity: 0; transform: scale(1.5) translate(-50%, -50%); }
+}
+/* 卡片展示區 */
+.card-list {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  align-items: flex-end;
+  margin-top: 32px;
+}
+.card-item {
+  width: 80px;
+  height: 120px;
+  perspective: 600px;
+  position: relative;
+  transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+  transform: translateY(40px);
+}
+.card-item.flipped {
+  transform: translateY(0);
+}
+.card-face {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  box-shadow: 0 2px 12px #0002;
+  transition: box-shadow 0.3s;
+}
+.card-back {
+  background: linear-gradient(135deg, #bbb 60%, #eee 100%);
+  color: #444;
+}
+.card-front {
+  background: linear-gradient(135deg, #fffbe6 60%, #f5c542 100%);
+  color: #222;
+  transform: rotateY(180deg);
+}
+.card-item {
+  transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+}
+.card-item .card-face {
+  transition: transform 0.6s, box-shadow 0.3s;
+}
+.card-item.flipped .card-back {
+  transform: rotateY(180deg);
+}
+.card-item.flipped .card-front {
+  transform: rotateY(0deg);
+}
+/* 稀有卡特效 */
+.card-item.rare .card-front {
+  box-shadow: 0 0 24px 8px #ffd70088, 0 2px 12px #f5c54288;
+  border: 2px solid #ffd700;
+  animation: rare-glow 1.2s infinite alternate;
+}
+@keyframes rare-glow {
+  0% { box-shadow: 0 0 24px 8px #ffd70088, 0 2px 12px #f5c54288; }
+  100% { box-shadow: 0 0 36px 16px #ffd700cc, 0 2px 12px #f5c542cc; }
 }

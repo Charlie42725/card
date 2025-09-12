@@ -1,103 +1,104 @@
-import Image from "next/image";
+
+
+"use client";
+import React, { useState, useEffect } from "react";
+
+const CARD_COUNT = 5;
+const CARD_TYPES = ["普通卡", "稀有卡"];
+
+function getRandomCards(count: number): string[] {
+  // 至少一張稀有卡
+  const cards = Array(count).fill("普通卡");
+  const rareIndex = Math.floor(Math.random() * count);
+  cards[rareIndex] = "稀有卡";
+  // 其餘隨機
+  for (let i = 0; i < count; i++) {
+    if (i !== rareIndex) {
+      cards[i] = Math.random() < 0.2 ? "稀有卡" : "普通卡";
+    }
+  }
+  return cards;
+}
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [opened, setOpened] = useState(false);
+  const [showExplosion, setShowExplosion] = useState(false);
+  const [cards, setCards] = useState<string[]>([]);
+  const [showCards, setShowCards] = useState(false);
+  const [flipped, setFlipped] = useState<number[]>([]);
+  const [selectedPack, setSelectedPack] = useState<number | null>(null);
+  const PACKS = ["紅色卡包", "藍色卡包", "綠色卡包", "紫色卡包", "金色卡包"];
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  // 點擊抽卡
+  const handleOpen = () => {
+    if (opened || selectedPack === null) return;
+    setOpened(true);
+  };
+
+  // 動畫流程
+  useEffect(() => {
+    if (opened) {
+      // 拆包爆光
+      setTimeout(() => {
+        setShowExplosion(true);
+        // 卡片出現
+        setTimeout(() => {
+          setShowCards(true);
+          const result = getRandomCards(CARD_COUNT);
+          setCards(result);
+          // 卡片依序翻轉
+          result.forEach((_, i) => {
+            setTimeout(() => {
+              setFlipped((prev) => [...prev, i]);
+            }, 600 + i * 400);
+          });
+        }, 600);
+      }, 500);
+    }
+  }, [opened]);
+
+  return (
+    <main className="gacha-main">
+      <h1 className="title">抽卡動畫示例</h1>
+      <button
+        className="gacha-btn"
+        onClick={handleOpen}
+        disabled={opened || selectedPack === null}
+      >
+        {opened ? "已開啟" : "抽卡"}
+      </button>
+      <div className="gacha-area">
+        {/* 卡包選擇區域 */}
+        {!opened && (
+          <div className="pack-scroll">
+            {PACKS.map((pack, idx) => (
+              <div
+                key={pack}
+                className={`card-pack scroll-pack ${selectedPack === idx ? "selected" : ""}`}
+                onClick={() => setSelectedPack(idx)}
+              >
+                {pack}
+              </div>
+            ))}
+          </div>
+        )}
+        {/* 爆光動畫 */}
+        {showExplosion && <div className="explosion" />}
+        {/* 卡片展示區 */}
+        {showCards && (
+          <div className="card-list">
+            {cards.map((type, idx) => (
+              <div
+                key={idx}
+                className={`card-item ${flipped.includes(idx) ? "flipped" : ""} ${type === "稀有卡" ? "rare" : ""}`}
+              >
+                <div className="card-face card-back">背面</div>
+                <div className="card-face card-front">{type}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
