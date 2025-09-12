@@ -66,24 +66,34 @@ body {
   width: 100%;
   justify-content: center;
   margin-bottom: 24px;
-}
-.scroll-pack {
-  min-width: 120px;
-  height: 160px;
-  background: linear-gradient(135deg, #e0e0e0 60%, #fffbe6 100%);
-  border-radius: 16px;
-  box-shadow: 0 0 12px #0002;
-  display: flex;
+  position: relative;
+  height: 200px;
   align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: border 0.2s, box-shadow 0.2s;
-  user-select: none;
 }
-.scroll-pack.selected {
+
+.pack-scroll::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  background: radial-gradient(circle, #ffd700 30%, #f5c542 70%);
+  border-radius: 50%;
+  z-index: 1;
+  box-shadow: 0 0 20px #ffd70080;
+}
+.card-pack {
+  animation: orbit-rotation 8s linear infinite;
+  will-change: transform;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  position: relative;
+  z-index: 2;
+}
+.card-pack.selected {
+  animation: none !important;
   border: 2px solid #f5c542;
   box-shadow: 0 0 24px #f5c54288, 0 2px 12px #0002;
   background: linear-gradient(135deg, #f5c542 60%, #fffbe6 100%);
@@ -100,7 +110,10 @@ body {
   justify-content: center;
   font-size: 1.3rem;
   font-weight: bold;
-  animation: pack-in 0.8s ease-in-out;
+  cursor: pointer;
+  user-select: none;
+  border: 2px solid transparent;
+  transition: border 0.2s, box-shadow 0.2s;
 }
 @keyframes pack-in {
   0% { transform: scale(0.7); opacity: 0.5; }
@@ -177,12 +190,49 @@ body {
 .card-item .card-face {
   transition: transform 0.6s, box-shadow 0.3s;
 }
-.card-item.flipped .card-back {
-  transform: rotateY(180deg);
+
+@keyframes orbit-rotation {
+  0% { 
+    transform: translateX(-120px) rotateY(0deg) translateX(120px);
+  }
+  25% { 
+    transform: translateX(-120px) rotateY(90deg) translateX(120px);
+  }
+  50% { 
+    transform: translateX(-120px) rotateY(180deg) translateX(120px);
+  }
+  75% { 
+    transform: translateX(-120px) rotateY(270deg) translateX(120px);
+  }
+  100% { 
+    transform: translateX(-120px) rotateY(360deg) translateX(120px);
+  }
 }
-.card-item.flipped .card-front {
-  transform: rotateY(0deg);
+
+@keyframes pack-rotate {
+  0% { 
+    transform: rotateX(15deg) rotateY(0deg) rotateZ(5deg);
+  }
+  25% { 
+    transform: rotateX(25deg) rotateY(90deg) rotateZ(-5deg);
+  }
+  50% { 
+    transform: rotateX(15deg) rotateY(180deg) rotateZ(5deg);
+  }
+  75% { 
+    transform: rotateX(5deg) rotateY(270deg) rotateZ(-5deg);
+  }
+  100% { 
+    transform: rotateX(15deg) rotateY(360deg) rotateZ(5deg);
+  }
 }
+
+ .scroll-pack.selected {
+   animation: none !important;
+   border: 2px solid #f5c542;
+   box-shadow: 0 0 24px #f5c54288, 0 2px 12px #0002;
+   background: linear-gradient(135deg, #f5c542 60%, #fffbe6 100%);
+ }
 /* 稀有卡特效 */
 .card-item.rare .card-front {
   box-shadow: 0 0 24px 8px #ffd70088, 0 2px 12px #f5c54288;

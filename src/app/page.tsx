@@ -1,5 +1,3 @@
-
-
 "use client";
 import React, { useState, useEffect } from "react";
 
@@ -74,8 +72,11 @@ export default function Home() {
             {PACKS.map((pack, idx) => (
               <div
                 key={pack}
-                className={`card-pack scroll-pack ${selectedPack === idx ? "selected" : ""}`}
+                className={`card-pack${selectedPack === idx ? " selected" : ""}`}
                 onClick={() => setSelectedPack(idx)}
+                style={{
+                  animationDelay: `${idx * -1.6}s`
+                }}
               >
                 {pack}
               </div>
