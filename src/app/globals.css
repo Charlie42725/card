@@ -66,7 +66,7 @@ body {
   justify-content: center;
   margin-bottom: 24px;
   position: relative;
-  height: 320px;
+  height: 420px;
   align-items: center;
   perspective: 1500px;
   perspective-origin: center center;
@@ -78,8 +78,8 @@ body {
 
 .orbit-container {
   position: relative;
-  width: 400px;
-  height: 400px;
+  width: 600px;
+  height: 500px;
   margin: 0 auto;
   transform-style: preserve-3d;
   perspective: 1200px;
@@ -113,10 +113,14 @@ body {
 }
 
 .card-pack.selected {
-  animation: none !important;
+  animation-play-state: paused !important;
   border: 2px solid #f5c542;
   box-shadow: 0 0 24px #f5c54288, 0 2px 12px #0002;
   background: linear-gradient(135deg, #f5c542 60%, #fffbe6 100%);
+}
+
+.orbit-container.paused .card-pack {
+  animation-play-state: paused !important;
 }
 
 @keyframes pack-in {
@@ -197,19 +201,19 @@ body {
 
 @keyframes orbit-rotation {
   0% { 
-    transform: rotateY(0deg) translateZ(150px) rotateY(0deg);
+    transform: rotateY(0deg) translateZ(200px) rotateY(0deg);
   }
   25% { 
-    transform: rotateY(90deg) translateZ(150px) rotateY(-90deg);
+    transform: rotateY(90deg) translateZ(200px) rotateY(-90deg);
   }
   50% { 
-    transform: rotateY(180deg) translateZ(150px) rotateY(-180deg);
+    transform: rotateY(180deg) translateZ(200px) rotateY(-180deg);
   }
   75% { 
-    transform: rotateY(270deg) translateZ(150px) rotateY(-270deg);
+    transform: rotateY(270deg) translateZ(200px) rotateY(-270deg);
   }
   100% { 
-    transform: rotateY(360deg) translateZ(150px) rotateY(-360deg);
+    transform: rotateY(360deg) translateZ(200px) rotateY(-360deg);
   }
 }
 

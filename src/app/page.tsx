@@ -27,6 +27,17 @@ export default function Home() {
   const [selectedPack, setSelectedPack] = useState<number | null>(null);
   const PACKS = ["紅色卡包", "藍色卡包", "綠色卡包", "紫色卡包", "金色卡包"];
 
+  // 點擊卡包選擇/取消選擇
+  const handlePackClick = (idx: number) => {
+    if (selectedPack === idx) {
+      // 如果點擊已選中的卡包，取消選擇
+      setSelectedPack(null);
+    } else {
+      // 選擇新卡包
+      setSelectedPack(idx);
+    }
+  };
+
   // 點擊抽卡
   const handleOpen = () => {
     if (opened || selectedPack === null) return;
@@ -69,12 +80,12 @@ export default function Home() {
         {/* 卡包選擇區域 */}
         {!opened && (
           <div className="pack-scroll">
-            <div className="orbit-container">
+            <div className={`orbit-container ${selectedPack !== null ? 'paused' : ''}`}>
               {PACKS.map((pack, idx) => (
                 <div
                   key={pack}
                   className={`card-pack${selectedPack === idx ? " selected" : ""}`}
-                  onClick={() => setSelectedPack(idx)}
+                  onClick={() => handlePackClick(idx)}
                   style={{
                     animationDelay: `${idx * -1.6}s`
                   }}
