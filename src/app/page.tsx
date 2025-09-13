@@ -69,18 +69,20 @@ export default function Home() {
         {/* 卡包選擇區域 */}
         {!opened && (
           <div className="pack-scroll">
-            {PACKS.map((pack, idx) => (
-              <div
-                key={pack}
-                className={`card-pack${selectedPack === idx ? " selected" : ""}`}
-                onClick={() => setSelectedPack(idx)}
-                style={{
-                  animationDelay: `${idx * -1.6}s`
-                }}
-              >
-                {pack}
-              </div>
-            ))}
+            <div className="orbit-container">
+              {PACKS.map((pack, idx) => (
+                <div
+                  key={pack}
+                  className={`card-pack${selectedPack === idx ? " selected" : ""}`}
+                  onClick={() => setSelectedPack(idx)}
+                  style={{
+                    animationDelay: `${idx * -1.6}s`
+                  }}
+                >
+                  {pack}
+                </div>
+              ))}
+            </div>
           </div>
         )}
         {/* 爆光動畫 */}

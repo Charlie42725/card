@@ -61,45 +61,39 @@ body {
 .pack-scroll {
   display: flex;
   gap: 24px;
-  overflow-x: auto;
   padding: 12px 0;
   width: 100%;
   justify-content: center;
   margin-bottom: 24px;
   position: relative;
-  height: 200px;
+  height: 320px;
   align-items: center;
+  perspective: 1500px;
+  perspective-origin: center center;
+  overflow: hidden;
+  transform-style: preserve-3d;
 }
 
-.pack-scroll::before {
-  content: '';
+
+
+.orbit-container {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+.card-pack {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
-  width: 30px;
-  height: 30px;
-  background: radial-gradient(circle, #ffd700 30%, #f5c542 70%);
-  border-radius: 50%;
-  z-index: 1;
-  box-shadow: 0 0 20px #ffd70080;
-}
-.card-pack {
+  margin-left: -60px;
+  margin-top: -80px;
   animation: orbit-rotation 8s linear infinite;
   will-change: transform;
-  perspective: 1000px;
-  transform-style: preserve-3d;
-  position: relative;
   z-index: 2;
-}
-.card-pack.selected {
-  animation: none !important;
-  border: 2px solid #f5c542;
-  box-shadow: 0 0 24px #f5c54288, 0 2px 12px #0002;
-  background: linear-gradient(135deg, #f5c542 60%, #fffbe6 100%);
-}
-/* 卡包動畫 */
-.card-pack {
   width: 120px;
   height: 160px;
   background: linear-gradient(135deg, #f5c542 60%, #fffbe6 100%);
@@ -114,7 +108,17 @@ body {
   user-select: none;
   border: 2px solid transparent;
   transition: border 0.2s, box-shadow 0.2s;
+  transform-style: preserve-3d;
+  backface-visibility: visible;
 }
+
+.card-pack.selected {
+  animation: none !important;
+  border: 2px solid #f5c542;
+  box-shadow: 0 0 24px #f5c54288, 0 2px 12px #0002;
+  background: linear-gradient(135deg, #f5c542 60%, #fffbe6 100%);
+}
+
 @keyframes pack-in {
   0% { transform: scale(0.7); opacity: 0.5; }
   60% { transform: scale(1.1); opacity: 1; }
@@ -193,19 +197,19 @@ body {
 
 @keyframes orbit-rotation {
   0% { 
-    transform: translateX(-120px) rotateY(0deg) translateX(120px);
+    transform: rotateY(0deg) translateZ(150px) rotateY(0deg);
   }
   25% { 
-    transform: translateX(-120px) rotateY(90deg) translateX(120px);
+    transform: rotateY(90deg) translateZ(150px) rotateY(-90deg);
   }
   50% { 
-    transform: translateX(-120px) rotateY(180deg) translateX(120px);
+    transform: rotateY(180deg) translateZ(150px) rotateY(-180deg);
   }
   75% { 
-    transform: translateX(-120px) rotateY(270deg) translateX(120px);
+    transform: rotateY(270deg) translateZ(150px) rotateY(-270deg);
   }
   100% { 
-    transform: translateX(-120px) rotateY(360deg) translateX(120px);
+    transform: rotateY(360deg) translateZ(150px) rotateY(-360deg);
   }
 }
 
