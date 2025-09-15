@@ -32,21 +32,11 @@ body {
   font-weight: bold;
   margin-bottom: 1.5rem;
 }
-.gacha-btn {
-  padding: 0.75rem 2rem;
-  font-size: 1.2rem;
-  border-radius: 8px;
-  background: #f5c542;
-  color: #222;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 2px 8px #0002;
-  transition: background 0.2s;
-}
-.gacha-btn:disabled {
-  background: #ccc;
-  color: #888;
-  cursor: not-allowed;
+.instruction {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 .gacha-area {
   margin-top: 2rem;

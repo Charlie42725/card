@@ -25,7 +25,41 @@ export default function Home() {
   const [showCards, setShowCards] = useState(false);
   const [flipped, setFlipped] = useState<number[]>([]);
   const [selectedPack, setSelectedPack] = useState<number | null>(null);
-  const PACKS = ["紅色卡包", "藍色卡包", "綠色卡包", "紫色卡包", "金色卡包"];
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragY, setDragY] = useState(0);
+  const [startY, setStartY] = useState(0);
+  const PACKS = ["代數卡包", "幾何卡包", "機率卡包", "微積分卡包", "數論卡包"];
+
+  // 開始拖拽
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    if (selectedPack === null || opened) return;
+    setIsDragging(true);
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    setStartY(clientY);
+    setDragY(0);
+  };
+
+  // 拖拽中
+  const handleDragMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    const deltaY = startY - clientY; // 往上拖為正值
+    setDragY(Math.max(0, deltaY)); // 只允許往上拖
+  };
+
+  // 結束拖拽
+  const handleDragEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    
+    // 如果拖拽超過 100px，觸發抽卡
+    if (dragY > 100) {
+      setOpened(true);
+    }
+    
+    setDragY(0);
+  };
 
   // 點擊卡包選擇/取消選擇
   const handlePackClick = (idx: number) => {
@@ -36,12 +70,6 @@ export default function Home() {
       // 選擇新卡包
       setSelectedPack(idx);
     }
-  };
-
-  // 點擊抽卡
-  const handleOpen = () => {
-    if (opened || selectedPack === null) return;
-    setOpened(true);
   };
 
   // 動畫流程
@@ -68,15 +96,16 @@ export default function Home() {
 
   return (
     <main className="gacha-main">
-      <h1 className="title">抽卡動畫示例</h1>
-      <button
-        className="gacha-btn"
-        onClick={handleOpen}
-        disabled={opened || selectedPack === null}
+      <h1 className="title">數學抽卡動畫</h1>
+      <div className="instruction">
+        {selectedPack === null ? "點擊選擇數學卡包" : "往上拖拽卡包來抽卡！"}
+      </div>
+      <div className="gacha-area"
+        onMouseMove={handleDragMove}
+        onMouseUp={handleDragEnd}
+        onTouchMove={handleDragMove}
+        onTouchEnd={handleDragEnd}
       >
-        {opened ? "已開啟" : "抽卡"}
-      </button>
-      <div className="gacha-area">
         {/* 卡包選擇區域 */}
         {!opened && (
           <div className="pack-scroll">
@@ -86,8 +115,14 @@ export default function Home() {
                   key={pack}
                   className={`card-pack${selectedPack === idx ? " selected" : ""}`}
                   onClick={() => handlePackClick(idx)}
+                  onMouseDown={handleDragStart}
+                  onTouchStart={handleDragStart}
                   style={{
-                    animationDelay: `${idx * -1.6}s`
+                    animationDelay: `${idx * -1.6}s`,
+                    transform: selectedPack === idx && isDragging ? 
+                      `translateY(-${dragY}px) scale(${1 + dragY * 0.002})` : 
+                      undefined,
+                    transition: isDragging ? 'none' : 'transform 0.3s ease'
                   }}
                 >
                   {pack}
