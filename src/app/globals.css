@@ -26,6 +26,8 @@ body {
   align-items: center;
   justify-content: center;
   background: var(--background);
+  user-select: none;
+  touch-action: none;
 }
 .title {
   font-size: 2rem;
@@ -94,7 +96,7 @@ body {
   justify-content: center;
   font-size: 1.3rem;
   font-weight: bold;
-  cursor: pointer;
+  cursor: grab;
   user-select: none;
   border: 2px solid transparent;
   transition: border 0.2s, box-shadow 0.2s;
@@ -102,15 +104,19 @@ body {
   backface-visibility: visible;
 }
 
+.card-pack:active {
+  cursor: grabbing;
+}
+
 .card-pack.selected {
-  animation-play-state: paused !important;
   border: 2px solid #f5c542;
   box-shadow: 0 0 24px #f5c54288, 0 2px 12px #0002;
   background: linear-gradient(135deg, #f5c542 60%, #fffbe6 100%);
 }
 
-.orbit-container.paused .card-pack {
-  animation-play-state: paused !important;
+.card-pack.dragging {
+  transform: translateY(calc(-1 * var(--drag-y))) !important;
+  cursor: grabbing !important;
 }
 
 @keyframes pack-in {
@@ -141,26 +147,70 @@ body {
 /* 卡片展示區 */
 .card-list {
   display: flex;
+  flex-wrap: wrap;
   gap: 24px;
   justify-content: center;
   align-items: flex-end;
   margin-top: 32px;
 }
+
+.prize-area {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.prize-title {
+  font-size: 2rem;
+  color: #f5c542;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  animation: bounce 1s ease-in-out infinite alternate;
+}
+
+.prize-message {
+  font-size: 1.3rem;
+  margin-top: 1.5rem;
+  color: #f5c542;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
 .card-item {
-  width: 80px;
-  height: 120px;
-  perspective: 600px;
+  width: 200px;
+  height: 280px;
+  perspective: 1000px;
   position: relative;
   transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
   transform: translateY(40px);
 }
+
 .card-item.flipped {
   transform: translateY(0);
+}
+
+.card-item.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
 }
 .card-face {
   width: 100%;
   height: 100%;
-  border-radius: 10px;
+  border-radius: 16px;
   position: absolute;
   top: 0;
   left: 0;
@@ -168,25 +218,38 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 2rem;
   font-weight: bold;
-  box-shadow: 0 2px 12px #0002;
+  box-shadow: 0 8px 32px rgba(245, 197, 66, 0.3);
   transition: box-shadow 0.3s;
 }
 .card-back {
-  background: linear-gradient(135deg, #bbb 60%, #eee 100%);
-  color: #444;
+  background: linear-gradient(135deg, #f5c542 0%, #ff6b6b 50%, #4ecdc4 100%);
+  color: white;
+  font-size: 3rem;
 }
+
 .card-front {
-  background: linear-gradient(135deg, #fffbe6 60%, #f5c542 100%);
+  background: linear-gradient(135deg, #fffbe6 0%, #f5c542 50%, #ff6b6b 100%);
   color: #222;
   transform: rotateY(180deg);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-.card-item {
-  transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+
+.card-item.rare .card-front {
+  background: linear-gradient(135deg, #ffd700 0%, #ff6b6b 50%, #ff1493 100%);
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  animation: glow 2s ease-in-out infinite alternate;
 }
-.card-item .card-face {
-  transition: transform 0.6s, box-shadow 0.3s;
+
+@keyframes glow {
+  from {
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.4);
+  }
+  to {
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.8);
+  }
 }
 
 @keyframes orbit-rotation {

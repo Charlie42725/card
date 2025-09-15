@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "數學抽卡動畫",
-  description: "互動式數學學習抽卡遊戲",
+  title: "可愛抽獎盒子",
+  description: "拖拽可愛盒子來抽獎！",
 };
 
 export default function RootLayout({
